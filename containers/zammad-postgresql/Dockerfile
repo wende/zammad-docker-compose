@@ -19,5 +19,5 @@ LABEL org.label-schema.build-date="$BUILD_DATE" \
       org.label-schema.docker.cmd="sysctl -w vm.max_map_count=262144;docker-compose up"
 
 # copy backup script
-COPY containers/zammad-postgresql/backup.sh /usr/local/bin/
+COPY backup.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/backup.sh

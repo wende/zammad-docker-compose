@@ -25,10 +25,11 @@ groupadd -g 1000 "${ZAMMAD_USER}"
 useradd -M -d "${ZAMMAD_DIR}" -s /bin/bash -u 1000 -g 1000 "${ZAMMAD_USER}"
 
 if [ "$1" = 'install' ]; then
-  cd "$(dirname "${ZAMMAD_TMP_DIR}")"
-  curl -s -J -L -O "${TAR_GZ_URL}"
-  tar -xzf zammad-"${GIT_BRANCH}".tar.gz
-  rm zammad-"${GIT_BRANCH}".tar.gz
+  echo "LOOOOOL ${USE_LOCAL}"
+  # cd "$(dirname "${ZAMMAD_TMP_DIR}")"
+  # curl -s -J -L -O "${TAR_GZ_URL}"
+  # tar -xzf zammad-"${GIT_BRANCH}".tar.gz
+  # rm zammad-"${GIT_BRANCH}".tar.gz
   cd "${ZAMMAD_TMP_DIR}"
   bundle install --without test development mysql
   contrib/packager.io/fetch_locales.rb

@@ -16,7 +16,7 @@ LABEL org.label-schema.build-date="$BUILD_DATE" \
 
 # docker init
 USER root
-COPY containers/zammad-memcached/docker-entrypoint.sh /
+COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 USER memcache
 ENTRYPOINT ["/docker-entrypoint.sh"]

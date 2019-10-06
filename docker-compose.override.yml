@@ -1,6 +1,8 @@
 version: '2'
 services:
-
+  zammad-init:
+    environment:
+      USE_LOCAL: "/Users/krzysztofwende/projects/nomad/nomad"
   zammad-nginx:
     ports:
       - "80:80"

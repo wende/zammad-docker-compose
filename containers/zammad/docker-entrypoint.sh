@@ -28,9 +28,10 @@ function check_zammad_ready {
     sleep 10
   done
 }
-
+echo "EXEC $1"
 # zammad init
 if [ "$1" = 'zammad-init' ]; then
+  echo "WENDE"
   # install / update zammad
   test -f "${ZAMMAD_READY_FILE}" && rm "${ZAMMAD_READY_FILE}"
   rsync -a --delete --exclude 'public/assets/images/*' --exclude 'storage/fs/*' "${ZAMMAD_TMP_DIR}/" "${ZAMMAD_DIR}"

@@ -1,5 +1,5 @@
 FROM ruby:2.5.5-slim AS builder
-# note: zammad is currently incompatible to alpine because of: 
+# note: zammad is currently incompatible to alpine because of:
 # https://github.com/docker-library/ruby/issues/113
 
 MAINTAINER Zammad <info@zammad.org>
@@ -7,18 +7,19 @@ ARG BUILD_DATE
 ARG DEBIAN_FRONTEND=noninteractive
 
 ENV GIT_BRANCH stable
-ENV GIT_URL ${PROJECT_URL}.git
-ENV GOSU_VERSION 1.11
 ENV PROJECT_URL https://github.com/zammad/zammad
-ENV RAILS_ENV production
+ENV GIT_URL ${PROJECT_URL}.git
 ENV TAR_GZ_URL ${PROJECT_URL}/archive/${GIT_BRANCH}.tar.gz
+ENV ZAMMAD_TMP_DIR /tmp/zammad-${GIT_BRANCH}
+
+ENV GOSU_VERSION 1.11
+ENV RAILS_ENV production
 ENV ZAMMAD_DIR /opt/zammad
 ENV ZAMMAD_READY_FILE ${ZAMMAD_DIR}/tmp/zammad.ready
-ENV ZAMMAD_TMP_DIR /tmp/zammad-${GIT_BRANCH}
 ENV ZAMMAD_USER zammad
 
 # install zammad
-COPY containers/zammad/setup.sh /tmp
+COPY setup.sh /tmp
 RUN chmod +x /tmp/setup.sh; \
     /tmp/setup.sh install
 
@@ -47,7 +48,7 @@ ENV ZAMMAD_READY_FILE ${ZAMMAD_DIR}/tmp/zammad.ready
 ENV ZAMMAD_TMP_DIR /tmp/zammad-${GIT_BRANCH}
 ENV ZAMMAD_USER zammad
 
-COPY containers/zammad/setup.sh /tmp
+COPY setup.sh /tmp
 RUN chmod +x /tmp/setup.sh; \
     /tmp/setup.sh run
 
@@ -56,7 +57,7 @@ COPY --from=builder /usr/local/bin/gosu /usr/local/bin/gosu
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 
 # docker init
-COPY containers/zammad/docker-entrypoint.sh /
+COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
