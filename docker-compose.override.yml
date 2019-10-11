@@ -1,8 +1,19 @@
 version: '2'
 services:
-  zammad-init:
-    environment:
-      USE_LOCAL: "/Users/krzysztofwende/projects/nomad/nomad"
   zammad-nginx:
     ports:
       - "80:80"
+  livereload:
+    build:
+      context: ./containers/zammad
+      dockerfile: Dockerfile
+      # same build settings as your Rails app
+    command: bundle exec guard -P livereload
+    # [...] whatever else you need
+    ports:
+      - 35738:35738
+    volumes:
+      - .:/opt/zammad  # or however you configured your Rails root volume
+  zammad-railsserver:
+    ports:
+      - 3000:3000

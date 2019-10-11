@@ -13,7 +13,7 @@ set -e
 : "${POSTGRESQL_PORT:=5432}"
 : "${POSTGRESQL_USER:=postgres}"
 : "${POSTGRESQL_PASS:=}"
-: "${POSTGRESQL_DB:=zammad_production}"
+: "${POSTGRESQL_DB:=zammad_${RAILS_ENV}}"
 : "${POSTGRESQL_DB_CREATE:=true}"
 : "${ZAMMAD_RAILSSERVER_HOST:=zammad-railsserver}"
 : "${ZAMMAD_RAILSSERVER_PORT:=3000}"
@@ -113,7 +113,7 @@ fi
 
 
 # zammad nginx
-if [ "$1" = 'zammad-nginx' ]; then
+if [ "$1" = 'zammad-nginx' ] ; then
   check_zammad_ready
 
   # configure nginx

@@ -7,7 +7,7 @@ set -e
 : "${POSTGRESQL_USER:=postgres}"
 : "${POSTGRESQL_HOST:=zammad-postgresql}"
 : "${POSTGRESQL_PORT:=5432}"
-: "${POSTGRESQL_DB:=zammad_production}"
+: "${POSTGRESQL_DB:=zammad_${RAILS_ENV}}"
 
 function check_railsserver_available {
   until (echo > /dev/tcp/${ZAMMAD_RAILSSERVER_HOST}/${ZAMMAD_RAILSSERVER_PORT}) &> /dev/null; do

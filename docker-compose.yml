@@ -8,14 +8,17 @@ services:
       - zammad-railsserver
     entrypoint: /usr/local/bin/backup.sh
     build:
-      context: .
-      dockerfile: /containers/zammad-postgresql/Dockerfile
+      context: ./containers/zammad-postgresql/
+      dockerfile: Dockerfile
     links:
       - zammad-postgresql
     restart: ${RESTART}
     volumes:
       - zammad-backup:/var/tmp/zammad
       - zammad-data:/opt/zammad
+    environment:
+      - RAILS_ENV
+
 
   zammad-elasticsearch:
     build:
@@ -38,6 +41,8 @@ services:
     restart: on-failure
     volumes:
       - zammad-data:/opt/zammad
+    environment:
+      - RAILS_ENV
 
   zammad-memcached:
     command: ["zammad-memcached"]
@@ -60,7 +65,9 @@ services:
     volumes:
       - zammad-data:/opt/zammad
     expose:
-      - "80"
+      - 80
+    environment:
+      - RAILS_ENV
 
   zammad-postgresql:
     build:
@@ -69,6 +76,8 @@ services:
     restart: ${RESTART}
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+    environment:
+      - RAILS_ENV
 
   zammad-railsserver:
     command: ["zammad-railsserver"]
@@ -85,6 +94,10 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
+    environment:
+      - RAILS_ENV
+    expose:
+      - 3000
 
   zammad-scheduler:
     command: ["zammad-scheduler"]
@@ -101,6 +114,8 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
+    environment:
+      - RAILS_ENV
 
   zammad-websocket:
     command: ["zammad-websocket"]
@@ -116,6 +131,8 @@ services:
     restart: ${RESTART}
     volumes:
       - zammad-data:/opt/zammad
+    environment:
+      - RAILS_ENV
 
 volumes:
   elasticsearch-data:

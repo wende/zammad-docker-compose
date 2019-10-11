@@ -13,12 +13,12 @@ ENV TAR_GZ_URL ${PROJECT_URL}/archive/${GIT_BRANCH}.tar.gz
 ENV ZAMMAD_TMP_DIR /tmp/zammad-${GIT_BRANCH}
 
 ENV GOSU_VERSION 1.11
-ENV RAILS_ENV production
 ENV ZAMMAD_DIR /opt/zammad
 ENV ZAMMAD_READY_FILE ${ZAMMAD_DIR}/tmp/zammad.ready
 ENV ZAMMAD_USER zammad
 
 # install zammad
+COPY ./nomad ${ZAMMAD_TMP_DIR}
 COPY setup.sh /tmp
 RUN chmod +x /tmp/setup.sh; \
     /tmp/setup.sh install
@@ -42,7 +42,6 @@ LABEL org.label-schema.build-date="$BUILD_DATE" \
       org.label-schema.docker.cmd="sysctl -w vm.max_map_count=262144;docker-compose up"
 
 ENV GIT_BRANCH stable
-ENV RAILS_ENV production
 ENV ZAMMAD_DIR /opt/zammad
 ENV ZAMMAD_READY_FILE ${ZAMMAD_DIR}/tmp/zammad.ready
 ENV ZAMMAD_TMP_DIR /tmp/zammad-${GIT_BRANCH}
