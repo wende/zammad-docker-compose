@@ -1,25 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-# install dependencies
-if [ "$1" = 'install' ]; then
-  PACKAGES="build-essential curl git libimlib2-dev libpq-dev"
-elif [ "$1" = 'run' ]; then
-  PACKAGES="curl libimlib2 libimlib2-dev libpq5 nginx rsync"
-fi
-
-apt-get update
-apt-get upgrade -y
-apt-get install -y --no-install-recommends ${PACKAGES}
-rm -rf /var/lib/apt/lists/*
-
-# install gosu
-if [ "$1" = 'install' ]; then
-  curl -s -J -L -o /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)"
-  chmod +x /usr/local/bin/gosu
-  gosu nobody true
-fi
-
 # install zammad
 groupadd -g 1000 "${ZAMMAD_USER}"
 useradd -M -d "${ZAMMAD_DIR}" -s /bin/bash -u 1000 -g 1000 "${ZAMMAD_USER}"
@@ -38,7 +19,10 @@ if [ "$1" = 'install' ]; then
   sed -i '/# Use a different logger for distributed setups./a \ \ config.logger = Logger.new(STDOUT)' config/environments/development.rb
   sed -i 's/.*scheduler_\(err\|out\).log.*//g' script/scheduler.rb
   touch db/schema.rb
-  bundle exec rake assets:precompile
-  rm -r tmp/cache
+  if [ "$RAILS_ENV" = 'production' ] ; then
+    bundle exec rake assets:precompile
+    rm -r tmp/cache
+  fi
   chown -R "${ZAMMAD_USER}":"${ZAMMAD_USER}" "${ZAMMAD_TMP_DIR}"
 fi
+echo "Setup successful"

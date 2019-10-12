@@ -15,5 +15,8 @@ services:
     volumes:
       - .:/opt/zammad  # or however you configured your Rails root volume
   zammad-railsserver:
+    volumes:
+      - "./containers/zammad/nomad:/zammad-codebase"
+
     ports:
       - 3000:3000

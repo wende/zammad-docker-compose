@@ -137,6 +137,20 @@ if [ "$1" = 'zammad-railsserver' ]; then
 
   echo "starting railsserver..."
 
+  # Copy the codebase to the right place
+  rsync -r --exclude 'config' --exclude 'script/scheduler.rb' /tmp/zammad-codebase/ /opt/zammad/
+
+  # Live reload
+  if [ "$RAILS_ENV" == "development" ]; then
+
+    ( inotifywait -rme modify,move,close_write,create,delete,delete_self /zammad-codebase/ | while read -r; do
+      # Exclude files that are changed on setup
+      rsync -r --exclude 'config' --exclude 'script/scheduler.rb' /zammad-codebase/ /opt/zammad/
+      #sleep 1
+    done )&
+    echo "Rsync server started using inotify"
+  fi
+
   #shellcheck disable=SC2101
   exec gosu "${ZAMMAD_USER}":"${ZAMMAD_USER}" bundle exec rails server puma -b [::] -p "${ZAMMAD_RAILSSERVER_PORT}" -e "${RAILS_ENV}"
 fi
