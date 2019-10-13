@@ -62,9 +62,9 @@ ENV GIT_BRANCH stable
 ENV ZAMMAD_DIR /opt/zammad
 ENV ZAMMAD_READY_FILE ${ZAMMAD_DIR}/tmp/zammad.ready
 ENV ZAMMAD_TMP_DIR /tmp/zammad-${GIT_BRANCH}
-ENV ZAMMAD_CODEBASE_DIR /tmp/zammad-codebase
+ENV ZAMMAD_CODEBASE_DIR /zammad-codebase
 ENV ZAMMAD_USER zammad
-
+ENV RAKE_LIVE_RELOAD true
 
 COPY setup.sh /tmp
 RUN chmod +x /tmp/setup.sh && /tmp/setup.sh run

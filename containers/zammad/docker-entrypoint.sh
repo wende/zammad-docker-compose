@@ -34,8 +34,23 @@ if [ "$1" = 'zammad-init' ]; then
   echo "WENDE"
   # install / update zammad
   test -f "${ZAMMAD_READY_FILE}" && rm "${ZAMMAD_READY_FILE}"
-  rsync -a --delete --exclude 'public/assets/images/*' --exclude 'storage/fs/*' "${ZAMMAD_TMP_DIR}/" "${ZAMMAD_DIR}"
-  rsync -a "${ZAMMAD_TMP_DIR}"/public/assets/images/ "${ZAMMAD_DIR}"/public/assets/images
+  rsync -a --exclude 'public/assets/images/*' \
+           --exclude 'storage/fs/*' \
+           "${ZAMMAD_TMP_DIR}/" "${ZAMMAD_DIR}"
+
+  echo "WENDE 2"
+  # Copy the codebase from the volume
+  rsync -ru --exclude 'config'\
+            --exclude 'script/scheduler.rb' \
+            --exclude 'public/assets/images/*' \
+            --exclude 'storage/fs/*' \
+            "${ZAMMAD_CODEBASE_DIR}/" "${ZAMMAD_DIR}"
+
+  ls ${ZAMMAD_DIR}
+
+  if ["${RAILS_ENV}" == 'production']; then
+    rsync -a "${ZAMMAD_TMP_DIR}"/public/assets/images/ "${ZAMMAD_DIR}"/public/assets/images
+  fi
 
   until (echo > /dev/tcp/"${POSTGRESQL_HOST}"/"${POSTGRESQL_PORT}") &> /dev/null; do
     echo "zammad railsserver waiting for postgresql server to be ready..."
@@ -136,9 +151,6 @@ if [ "$1" = 'zammad-railsserver' ]; then
   cd "${ZAMMAD_DIR}"
 
   echo "starting railsserver..."
-
-  # Copy the codebase to the right place
-  rsync -r --exclude 'config' --exclude 'script/scheduler.rb' /tmp/zammad-codebase/ /opt/zammad/
 
   # Live reload
   if [ "$RAILS_ENV" == "development" ]; then

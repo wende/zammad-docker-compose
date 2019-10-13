@@ -3,7 +3,7 @@ services:
   zammad-nginx:
     ports:
       - "80:80"
-  livereload:
+  zammad-livereload:
     build:
       context: ./containers/zammad
       dockerfile: Dockerfile
